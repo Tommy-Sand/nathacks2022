@@ -1,6 +1,5 @@
 import mne
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd 
 
 def recording_length():
