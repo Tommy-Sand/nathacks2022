@@ -1,5 +1,5 @@
 from typing import Type
-import mne
+import mne, os
 import numpy as np
 import pandas as pd 
 from pathlib import Path
@@ -82,6 +82,7 @@ def main(path):
     #Transform data to raw
     #Transform raw to frequency domain, and convert to db
     #Calculate the most common brain waves
+    path = Path(path)
     file_format = Path(path).suffix
     duration = recording_length()
     if(file_format == '.csv'):
@@ -98,4 +99,5 @@ def main(path):
 
 
 if(__name__ == '__main__'):
-    main("F:\\src\\nathacks2022\\mne\\s00raw.fif")
+    path = input("Enter a file that contains eeg data: ")
+    print(main(path))
