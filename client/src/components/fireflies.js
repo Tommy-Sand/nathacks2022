@@ -13,21 +13,31 @@ const s = (sketch) => {
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
     sketch.background(0);
+    let t = 0;
+    sketch.noiseSeed(sketch.random(10, 20));
+    for (let x = 0; x < sketch.width; x += 0.5) {
+      let n = sketch.noise(t);
+      t += 0.002;
+      mountain2[x * 2] = n * sketch.height * 1.3;
+    }
     m1 = new Mountain();
     m1.init();
     r = new River();
     r.init();
-    m2 = new Mountain();
-    m2.init();
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
       createFirefly();
     }
   };
 
   sketch.draw = () => {
     sketch.background(0);
-    r.show();
+    for (let i = 0; i < sketch.width; i += 0.5) {
+      sketch.stroke(sketch.color(74, 50, 42));
+      sketch.line(i, sketch.height, i, sketch.height - mountain2[i * 2]);
+      sketch.stroke(255);
+    }
     m1.show();
+    r.show();
     for (let i = 0; i < fireflies.length; i++) {
       fireflies[i].update();
       fireflies[i].show();
@@ -41,16 +51,17 @@ const s = (sketch) => {
   function Mountain() {
     this.init = () => {
       let t = 0;
-      for (let x = 0; x < sketch.width; x++) {
+      sketch.noiseSeed(sketch.random(10));
+      for (let x = 0; x < sketch.width; x += 0.5) {
         let n = sketch.noise(t);
-        t += 0.01;
-        mountain1[x] = n * 100;
+        t += 0.002;
+        mountain1[x * 2] = n * sketch.height * 0.7;
       }
 
       this.show = () => {
-        for (let i = 0; i < sketch.width; i++) {
-          sketch.stroke(sketch.color("brown"));
-          sketch.line(i, sketch.height, i, sketch.height - mountain1[i]);
+        for (let i = 0; i < sketch.width; i += 0.5) {
+          sketch.stroke(sketch.color(79, 24, 13));
+          sketch.line(i, sketch.height, i, sketch.height - mountain1[i * 2]);
           sketch.stroke(255);
         }
       };
@@ -60,18 +71,17 @@ const s = (sketch) => {
   function River() {
     this.init = () => {
       let t = 0;
-      for (let i = 0; i < sketch.width; i++) {
-        sketch.noiseSeed(sketch.random());
+      for (let x = 0; x < sketch.width; x++) {
         let n = sketch.noise(t);
-        t += 0.009;
-        river[i] = n * 60;
+        t += 0.0004;
+        river[x] = n * sketch.height * 0.4;
       }
     };
 
     this.show = () => {
       for (let i = 0; i < sketch.width; i++) {
-        sketch.stroke(sketch.color("blue"));
-        sketch.line(i, sketch.height, i, sketch.height - 100 - river[i]);
+        sketch.stroke(sketch.color(17, 120, 187));
+        sketch.line(i, sketch.height, i, sketch.height - river[i]);
         sketch.stroke(255);
       }
     };
@@ -84,6 +94,7 @@ const s = (sketch) => {
     this.blinked = false;
 
     this.show = () => {
+      sketch.fill(sketch.color(232, 255, 7));
       sketch.circle(this.position.x, this.position.y, this.diameter);
     };
 
@@ -133,8 +144,8 @@ const s = (sketch) => {
       ),
       sketch.random(1, 5),
       sketch.createVector(
-        sketch.random(0.5, 2) * getone(),
-        sketch.random(0.5, 2) * getone()
+        sketch.random(1, 2) * getone(),
+        sketch.random(1, 2) * getone()
       )
     );
 
