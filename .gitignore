@@ -3,6 +3,9 @@
 .idea
 
 # dependencies
+node_modules
+package-lock.json
+package.json
 client/node_modules
 client/.pnp
 client/.pnp.js
