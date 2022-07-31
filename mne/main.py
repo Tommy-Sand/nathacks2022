@@ -1,6 +1,8 @@
+from typing import Type
 import mne
 import numpy as np
 import pandas as pd 
+from pathlib import Path
 
 def recording_length():
     while(True):
@@ -15,7 +17,20 @@ def recording_length():
 def init_data(path):
     return pd.read_csv(path).transpose()
 
-def init_raw(data, duration):
+def init_raw(path):
+    try:
+        return mne.io.read_raw(path)
+    except FileNotFoundError:
+        print("File not found")
+        return 1
+    except AssertionError:
+        print("File not allowed format")
+        return 2
+    except:
+        print("Unknown error")
+        return 3
+
+def init_raw_from_data(data, duration):
     #These channel names are meaningless since we will average all channels
     misc_ch_names = [str(i) for i in range(len(data))]
 
@@ -67,12 +82,20 @@ def main(path):
     #Transform data to raw
     #Transform raw to frequency domain, and convert to db
     #Calculate the most common brain waves
+    file_format = Path(path).suffix
     duration = recording_length()
-    data = init_data(path)
-    raw = init_raw(data, duration)
+    if(file_format == '.csv'):
+        data = init_data(path)
+        if(isinstance(data, int)):
+            return None
+        raw = init_raw_from_data(data, duration)
+    else:
+        raw = init_raw(path)
+        if(isinstance(raw, int)):
+            return None
     freq, db_mean  = init_freq_dom(raw)
     return collect_brain_waves(freq, db_mean)
 
 
 if(__name__ == '__main__'):
-    main("F:\\src\\nathacks2022\\mne\\s00.csv")
+    main("F:\\src\\nathacks2022\\mne\\s00raw.fif")
