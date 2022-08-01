@@ -3,8 +3,10 @@ from flask_restful import reqparse, Api, Resource, inputs
 import werkzeug
 from process_eeg import process_eeg
 from pathlib import Path
+from flask_cors import CORS
 
 app = flask.Flask(__name__)
+CORS(app)
 api = Api(app)
 
 class Upload(Resource):
@@ -22,8 +24,12 @@ class Upload(Resource):
         else:
             to_be_returned = process_eeg(path)
         path.unlink(missing_ok=True)
+<<<<<<< HEAD
         to_be_returned = flask.jsonify(to_be_returned)
         to_be_returned.headers.add("Access-Control-Allow-Origin", "*")
+=======
+        print(to_be_returned)
+>>>>>>> 84697ebe90568515aecda0eff3331a09f405023f
         return to_be_returned
 api.add_resource(Upload, "/")
 
