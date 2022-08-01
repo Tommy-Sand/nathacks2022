@@ -28,14 +28,22 @@ function Form(props) {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="myForm">Select a file</label>
-        <div></div>
-        <input type="file" ref={ref} />
-        <button type="submit">submit</button>
-      </form>
-    </div>
+    <>
+      <h1 className="main-heading">Visualize Brain Activity</h1>
+      <div className="center-box">
+        <h1>Convert EEG data to soundscapes</h1>
+        <div>=======================</div>
+        <form className="file-form" onSubmit={handleSubmit}>
+          <label htmlFor="myForm">Select your eeg data</label>
+          <div>=========================</div>
+          <input type="file" ref={ref} />
+          <div>=========================</div>
+          <button className="mybtn" type="submit">
+            submit
+          </button>
+        </form>
+      </div>
+    </>
   );
 }
 
