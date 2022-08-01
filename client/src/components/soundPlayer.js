@@ -1,15 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 import guitar from "../sounds/guitar.mp3";
+import birds from "../sounds/birds.mp3";
+import river from "../sounds/river.mp3";
 
-function SoundController() {
+function SoundController({ rate }) {
+  let birdrate = 1;
+  if ((Math.abs(rate) % 100) / 100 < 0.1) {
+    birdrate = 20;
+  }
   return (
     <div>
-      <SoundPlayer soundSource={guitar} />
+      <SoundPlayer rate={rate * 2} soundSource={guitar} />
+      <SoundPlayer rate={birdrate} soundSource={birds} />
+      <SoundPlayer rate={1} soundSource={river} />
     </div>
   );
 }
 
-function SoundPlayer({ soundSource }) {
+function SoundPlayer({ rate, soundSource }) {
   const ref = useRef(null);
   let soundFeatures, setSoundFeatures;
   [soundFeatures, setSoundFeatures] = useState({});
@@ -31,6 +39,10 @@ function SoundPlayer({ soundSource }) {
     play();
     setVol(1 / 100);
   }, []);
+
+  useEffect(() => {
+    setVol((Math.abs(rate) % 100) / 100);
+  }, [rate]);
 
   return (
     // what controls?

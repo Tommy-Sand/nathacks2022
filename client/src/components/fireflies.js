@@ -211,6 +211,7 @@ function Fireflies(props) {
   const ref = useRef(null);
   const { data } = useContext(ActivityContext);
   const [count, setCount] = useState(1);
+  const [rate, setRate] = useState(1);
 
   useEffect(() => {
     let myp5 = new p5(s, ref.current);
@@ -223,6 +224,7 @@ function Fireflies(props) {
     const change = processMood(data[count - 1], data[count]);
     if (Math.abs(change) > 0) {
       speed += change;
+      setRate(speed);
     }
     const interval = setInterval(() => {
       setCount((prevState) => prevState + 1);
@@ -236,7 +238,7 @@ function Fireflies(props) {
   return (
     <div>
       <div ref={ref}></div>;
-      <SoundController />
+      <SoundController rate={rate} />
     </div>
   );
 }
