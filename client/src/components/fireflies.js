@@ -91,6 +91,8 @@ const s = (sketch) => {
       t += 0.01;
     }
     r.show();
+    sketch.fill(sketch.color("blue"));
+    sketch.text("speed: " + Math.abs(speed).toFixed(2), 0, sketch.height / 8);
   };
 
   function Mountain() {

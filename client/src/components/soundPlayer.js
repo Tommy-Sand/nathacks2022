@@ -6,7 +6,7 @@ import river from "../sounds/river.mp3";
 function SoundController({ rate }) {
   let birdrate = 1;
   if ((Math.abs(rate) % 100) / 100 < 0.1) {
-    birdrate = 20;
+    birdrate = 4;
   }
   return (
     <div>
@@ -41,7 +41,7 @@ function SoundPlayer({ rate, soundSource }) {
   }, []);
 
   useEffect(() => {
-    setVol((Math.abs(rate) % 100) / 100);
+    setVol(clamp(Math.abs(rate * 2), 0, 100) / 100);
   }, [rate]);
 
   return (
@@ -55,5 +55,6 @@ function SoundPlayer({ rate, soundSource }) {
     </div>
   );
 }
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
 export default SoundController;
