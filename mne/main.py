@@ -4,8 +4,6 @@ import werkzeug
 from process_eeg import process_eeg
 from pathlib import Path
 
-UPLOAD_DIR = input("Enter a directory you want to use to store databases")
-
 app = flask.Flask(__name__)
 api = Api(app)
 
@@ -24,8 +22,11 @@ class Upload(Resource):
         else:
             to_be_returned = process_eeg(path)
         path.unlink(missing_ok=True)
+        to_be_returned = flask.jsonify(to_be_returned)
+        to_be_returned.headers.add("Access-Control-Allow-Origin", "*")
         return to_be_returned
 api.add_resource(Upload, "/")
 
 if(__name__ == "__main__"):
+    UPLOAD_DIR = input("Enter a directory you want to use to store databases")
     app.run(debug=True)
