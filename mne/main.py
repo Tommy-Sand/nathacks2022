@@ -9,6 +9,8 @@ app = flask.Flask(__name__)
 CORS(app)
 api = Api(app)
 
+UPLOAD_DIR = input('enter the dir')
+
 class Upload(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()

@@ -27,6 +27,7 @@ function SoundPlayer({ soundSource }) {
   };
 
   useEffect(() => {
+    ref.current.loop = true;
     play();
     setVol(1 / 100);
   }, []);

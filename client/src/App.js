@@ -2,13 +2,16 @@ import "./App.css";
 import Fireflies from "./components/fireflies";
 import Form from "./components/form";
 import SoundController from "./components/soundPlayer";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div>
-      <Fireflies />
-      <SoundController />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Form />} />
+        <Route path="/mountains" element={<Fireflies />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

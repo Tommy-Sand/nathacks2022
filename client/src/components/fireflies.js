@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import p5 from "p5";
+import { processMood } from "../utils/moodStates";
+import { ActivityContext } from "../context/ActivityDataContext";
 
 const s = (sketch) => {
   let x = 100;
@@ -11,8 +13,8 @@ const s = (sketch) => {
   let mountain2 = [];
   let fireflies = [];
   let moonRandom;
-  let riverx,
-    rivernoise = 0;
+  let riverx;
+  let rivernoise = 0;
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
@@ -59,6 +61,7 @@ const s = (sketch) => {
     m1.show();
     for (let i = 0; i < fireflies.length; i++) {
       fireflies[i].update();
+      fireflies[i].setSpeed(1);
       fireflies[i].show();
       if (!fireflies[i].isOnScreen()) {
         fireflies.splice(i, 1);
@@ -131,7 +134,7 @@ const s = (sketch) => {
   }
 
   function firefly(position, diameter, direction) {
-    this.direction = direction;
+    this.direction = direction.normalize();
     this.position = position;
     this.diameter = diameter;
     this.blinked = false;
@@ -170,6 +173,10 @@ const s = (sketch) => {
         this.position.y < 0
       );
     };
+
+    this.setSpeed = (speed) => {
+      this.direction = this.direction.normalize().mult(speed);
+    };
   }
 
   function getone() {
@@ -198,9 +205,17 @@ const s = (sketch) => {
 
 function Fireflies(props) {
   const ref = useRef(null);
+  const { data } = useContext(ActivityContext);
 
   useEffect(() => {
     let myp5 = new p5(s, ref.current);
+    console.log(data);
+    // let timer = setTimeout(() => {
+    //   if (i < data.length) {
+    //     // find the highest frequency
+    //     console.log(processMood(data[i]));
+    //   }
+    // });
   }, []);
 
   return <div ref={ref}></div>;
