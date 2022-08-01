@@ -3,10 +3,12 @@ from flask_restful import reqparse, Api, Resource, inputs
 import werkzeug
 from process_eeg import process_eeg
 from pathlib import Path
+from flask_cors import CORS
 
 UPLOAD_DIR = input("Enter a directory you want to use to store databases")
 
 app = flask.Flask(__name__)
+CORS(app)
 api = Api(app)
 
 class Upload(Resource):
@@ -24,6 +26,7 @@ class Upload(Resource):
         else:
             to_be_returned = process_eeg(path)
         path.unlink(missing_ok=True)
+        print(to_be_returned)
         return to_be_returned
 api.add_resource(Upload, "/")
 
