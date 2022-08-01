@@ -13,7 +13,7 @@ body{
 }
 
 .center-box{
-
+  justify-content: space-evenly;
   border-radius: 10px;
   margin: 10rem auto;
   width: 50rem;

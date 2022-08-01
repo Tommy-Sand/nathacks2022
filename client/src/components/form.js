@@ -34,7 +34,9 @@ function Form(props) {
         <h1>Convert EEG data to soundscapes</h1>
         <div>=======================</div>
         <form className="file-form" onSubmit={handleSubmit}>
-          <label htmlFor="myForm">Select your eeg data</label>
+          <label htmlFor="myForm">
+            <h2>Select your eeg data</h2>
+          </label>
           <div>=========================</div>
           <input type="file" ref={ref} />
           <div>=========================</div>
