@@ -73,12 +73,18 @@ def init_freq_dom(raw):
         fmax = epochs[i].info["lowpass"]
         if(fmax > 140):
             fmax = 140
-        psds, freqs = mne.time_frequency.psd_welch(raw, tmax=epoch_duration, fmax=fmax, n_jobs=-1)
+        epoch = epochs[i]
+        psds, freqs = mne.time_frequency.psd_welch(epoch, tmax=epoch_duration, fmax=fmax, n_jobs=-1)
+        psds = psds[0]
         psds = 10 * np.log10(psds)
         psds_mean = psds.mean(0)
         psd_epochs.append((freqs, psds_mean))
     return psd_epochs
 
+#Function -
+#Parameter:
+#
+#Return ():
 def collect_brain_waves(freqs, psd_mean):
     psd_min = abs(min(psd_mean))
     
@@ -107,6 +113,10 @@ def collect_brain_waves(freqs, psd_mean):
 
     return dic_waves
 
+#Function -
+#Parameter:
+#
+#Return ():
 def collect_brain_waves_loop(psd_epochs):
     epochs_dic_waves = []
     for i in range(len(psd_epochs)):
@@ -117,6 +127,10 @@ def collect_brain_waves_loop(psd_epochs):
         epochs_dic_waves.append(dic_waves)
     return epochs_dic_waves
 
+#Function process_eeg - The main function that is entered by main.py to calculate the 
+#Parameter:
+#
+#Return ():
 def process_eeg(path, duration=None):
     #we ask how long the recording is
     #We initialize and load the data
@@ -145,7 +159,6 @@ def process_eeg(path, duration=None):
                 return {"error" : "Unknown error when reading file"}
     psd_epochs  = init_freq_dom(raw)
     return collect_brain_waves_loop(psd_epochs)
-
 
 if(__name__ == '__main__'):
     #path = input("Enter a file that contains eeg data: ")
