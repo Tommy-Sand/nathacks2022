@@ -7,21 +7,23 @@ const moodMeaning = {
 };
 
 const moodSpeed = {
-  sleep: 8,
-  relaxed: 1,
-  focused: 5,
+  sleep: 10,
+  relaxed: -1,
+  focused: -2,
 };
 
-const processMood = (data) => {
-  console.log(data);
-  let highest = 0;
-  for (const key of data.keys()) {
-    if (data[key] > highest) {
-      highest = key;
+const processMood = (current, prev) => {
+  const change = {};
+  let changeNum = 0;
+  for (const key of Object.keys(current)) {
+    if (key !== "second") {
+      change[key] = current[key] - prev[key];
     }
   }
-  console.log(highest);
-  return moodSpeed[moodMeaning[highest]];
+  for (const key of Object.keys(change)) {
+    changeNum += change[key] * moodSpeed[moodMeaning[key]];
+  }
+  return changeNum / 100;
 };
 
 export { processMood };

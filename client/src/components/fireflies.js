@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import p5 from "p5";
 import { processMood } from "../utils/moodStates";
 import { ActivityContext } from "../context/ActivityDataContext";
-
+import SoundController from "./soundPlayer";
+let speed = 1;
 const s = (sketch) => {
   let x = 100;
   let y = 100;
@@ -32,6 +33,8 @@ const s = (sketch) => {
     bushes.push(sketch.loadImage("/flower.png"));
     bushes.push(sketch.loadImage("/flower2.png"));
 
+    sketch.textSize(40);
+
     let t = 0;
     sketch.noiseSeed(sketch.random(10, 20));
     for (let x = 0; x < sketch.width; x += 0.5) {
@@ -50,6 +53,7 @@ const s = (sketch) => {
 
   sketch.draw = () => {
     sketch.background(0);
+
     // moon
     sketch.fill(255);
     sketch.circle(moonRandom.x, moonRandom.y, 100);
@@ -61,7 +65,7 @@ const s = (sketch) => {
     m1.show();
     for (let i = 0; i < fireflies.length; i++) {
       fireflies[i].update();
-      fireflies[i].setSpeed(1);
+      fireflies[i].setSpeed(speed * 2);
       fireflies[i].show();
       if (!fireflies[i].isOnScreen()) {
         fireflies.splice(i, 1);
@@ -175,7 +179,7 @@ const s = (sketch) => {
     };
 
     this.setSpeed = (speed) => {
-      this.direction = this.direction.normalize().mult(speed);
+      this.direction = this.direction.normalize().mult(Math.abs(speed));
     };
   }
 
@@ -206,19 +210,35 @@ const s = (sketch) => {
 function Fireflies(props) {
   const ref = useRef(null);
   const { data } = useContext(ActivityContext);
+  const [count, setCount] = useState(1);
 
   useEffect(() => {
     let myp5 = new p5(s, ref.current);
-    console.log(data);
-    // let timer = setTimeout(() => {
-    //   if (i < data.length) {
-    //     // find the highest frequency
-    //     console.log(processMood(data[i]));
-    //   }
-    // });
   }, []);
 
-  return <div ref={ref}></div>;
+  useEffect(() => {
+    if (count >= data.length) {
+      return;
+    }
+    const change = processMood(data[count - 1], data[count]);
+    if (Math.abs(change) > 0) {
+      speed += change;
+    }
+    const interval = setInterval(() => {
+      setCount((prevState) => prevState + 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [count]);
+
+  return (
+    <div>
+      <div ref={ref}></div>;
+      <SoundController />
+    </div>
+  );
 }
 
 export default Fireflies;
